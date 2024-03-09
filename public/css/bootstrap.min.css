@@ -3906,9 +3906,9 @@ fieldset:disabled .btn {
 }
 
 .dropdown-menu {
-    position: absolute;
-    z-index: 1000;
-    display: none;
+    position: relative;
+    z-index: 1;
+    display: block;
     min-width: 10rem;
     padding: .5rem 0;
     margin: 0;

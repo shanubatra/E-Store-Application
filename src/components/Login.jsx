@@ -8,6 +8,7 @@ export default function Login() {
     username: "",
     password: "",
   });
+  let [pass, setpass] = useState(false);
   let [show, setShow] = useState(false);
   let navigate = useNavigate();
   let [errorMessage, setErrorMessage] = useState({
@@ -102,12 +103,24 @@ export default function Login() {
                 Password<span className="text-danger">*</span>
               </label>
               <input
-                type="password"
+                type={pass ? "text" : "password"}
                 onChange={getInputData}
                 name="password"
-                placeholder="**********"
-                className="form-control"
+                placeholder="Enter Password"
+                className="form-control mb-2"
               />
+              {pass ? (
+                <span>
+                  <i className="fa fa-eye" onClick={() => setpass(!pass)}></i>
+                </span>
+              ) : (
+                <span>
+                  <i
+                    className="fa fa-eye-slash"
+                    onClick={() => setpass(!pass)}
+                  ></i>
+                </span>
+              )}
               {show ? (
                 <p className="text-danger text-capitalize my-2">
                   {errorMessage.password}

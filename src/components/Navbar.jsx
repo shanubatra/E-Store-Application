@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { NavLink, Link, useNavigate } from "react-router-dom";
 export default function Navbar() {
@@ -7,6 +7,10 @@ export default function Navbar() {
     localStorage.clear();
     navigate("/login");
   }
+  let [toggle, setToggle] = useState(false);
+  let [ptoggle, setPtoggle] = useState(false);
+  let [navtog, setNavtog] = useState(true);
+
   const scrolltoTop = () => {
     window.scrollTo(0, 0);
   };
@@ -68,19 +72,8 @@ export default function Navbar() {
             <Link onClick={scrolltoTop} to="/" className="navbar-brand">
               <h1 className="text-primary display-6">E-Store</h1>
             </Link>
-            <button
-              className="navbar-toggler py-2 px-3"
-              type="button"
-              data-bs-toggle="collapse"
-              data-bs-target="#navbarCollapse"
-              aria-controls="navbarCollapse"
-              aria-expanded="false"
-              aria-label="Toggle navigation"
-            >
-              <span className="fa fa-bars text-primary"></span>
-            </button>
             <div
-              className="collapse navbar-collapse bg-white"
+              className="navbar-collapse bg-white collapse"
               id="navbarCollapse"
             >
               <div className="navbar-nav mx-auto">
@@ -98,40 +91,43 @@ export default function Navbar() {
                 >
                   Shop
                 </NavLink>
-                <div className="nav-item dropdown">
+                <div className="nav-item ">
                   <Link
-                    onClick={scrolltoTop}
+                    onClick={() => {
+                      scrolltoTop();
+                      setToggle(!toggle);
+                    }}
                     className="nav-link dropdown-toggle"
-                    data-bs-toggle="dropdown"
-                    data-toggle="dropdown"
-                    aria-haspopup="true"
-                    aria-expanded="false"
                   >
                     Others
                   </Link>
-                  <div className="dropdown-menu m-0 rounded-0">
-                    <NavLink
-                      onClick={scrolltoTop}
-                      to="/cart"
-                      className="dropdown-item dropcol"
-                    >
-                      Cart
-                    </NavLink>
-                    <NavLink
-                      onClick={scrolltoTop}
-                      to="/checkout"
-                      className="dropdown-item dropcol "
-                    >
-                      Checkout
-                    </NavLink>
-                    <NavLink
-                      onClick={scrolltoTop}
-                      to="/testimonialslider"
-                      className="dropdown-item dropcol"
-                    >
-                      Testimonial
-                    </NavLink>
-                  </div>
+                  {!toggle ? (
+                    ""
+                  ) : (
+                    <div className="dropdown-menu m-0 rounded-0">
+                      <NavLink
+                        onClick={scrolltoTop}
+                        to="/cart"
+                        className="dropdown-item dropcol"
+                      >
+                        Cart
+                      </NavLink>
+                      <NavLink
+                        onClick={scrolltoTop}
+                        to="/checkout"
+                        className="dropdown-item dropcol "
+                      >
+                        Checkout
+                      </NavLink>
+                      <NavLink
+                        onClick={scrolltoTop}
+                        to="/testimonialslider"
+                        className="dropdown-item dropcol"
+                      >
+                        Testimonial
+                      </NavLink>
+                    </div>
+                  )}
                 </div>
                 <NavLink
                   onClick={scrolltoTop}
@@ -171,22 +167,18 @@ export default function Navbar() {
                     ""
                   )}
                 </Link>
-                {/* <a href="/" className="my-auto link-color">
-                  <i className="fas fa-user fa-2x"></i>
-                </a> */}
               </div>
 
               <div className="navbar-nav mx-auto">
                 {localStorage.getItem("login") ? (
                   <div className="nav-item dropdown">
                     <Link
-                      onClick={scrolltoTop}
-                      to="/user"
+                      onClick={() => {
+                        scrolltoTop();
+                        setPtoggle(!ptoggle);
+                      }}
+                      to="/"
                       className="nav-link link-color dropdown-toggle text-capitalize fw-bold"
-                      data-bs-toggle="dropdown"
-                      data-toggle="dropdown"
-                      aria-haspopup="true"
-                      aria-expanded="false"
                     >
                       {localStorage.getItem("name")}
                       <span>
@@ -195,44 +187,42 @@ export default function Navbar() {
                       </span>
                     </Link>
                     {localStorage.getItem("role") === "Buyer" ? (
-                      <div className="dropdown-menu m-0 rounded-0">
-                        <Link
-                          onClick={scrolltoTop}
-                          to="/buyerprofile"
-                          className="dropdown-item dropcol text-dark "
-                        >
-                          Profile
-                        </Link>
-                        <Link
-                          onClick={scrolltoTop}
-                          to="/cart"
-                          className="dropdown-item dropcol text-dark "
-                        >
-                          Cart
-                        </Link>
-                        <Link
-                          onClick={scrolltoTop}
-                          to="/checkout"
-                          className="dropdown-item dropcol text-dark "
-                        >
-                          Checkout
-                        </Link>
-                        <Link
-                          onClick={scrolltoTop}
-                          to="/order"
-                          className="dropdown-item dropcol text-dark "
-                        >
-                          Your Orders
-                        </Link>
-                        <button
-                          onClick={logout}
-                          to="/testimonials"
-                          className="dropdown-item dropcol text-dark "
-                        >
-                          Logout
-                        </button>
-                      </div>
-                    ) : (
+                      ptoggle ? (
+                        <div className="dropdown-menu m-0 rounded-0">
+                          <Link
+                            onClick={scrolltoTop}
+                            to="/buyerprofile"
+                            className="dropdown-item dropcol text-dark "
+                          >
+                            Profile
+                          </Link>
+
+                          <Link
+                            onClick={scrolltoTop}
+                            to="/checkout"
+                            className="dropdown-item dropcol text-dark "
+                          >
+                            Checkout
+                          </Link>
+                          <Link
+                            onClick={scrolltoTop}
+                            to="/order"
+                            className="dropdown-item dropcol text-dark "
+                          >
+                            Your Orders
+                          </Link>
+                          <button
+                            onClick={logout}
+                            to="/testimonials"
+                            className="dropdown-item dropcol text-dark "
+                          >
+                            Logout
+                          </button>
+                        </div>
+                      ) : (
+                        ""
+                      )
+                    ) : ptoggle ? (
                       <div className="dropdown-menu m-0 rounded-0">
                         <Link
                           onClick={scrolltoTop}
@@ -250,6 +240,8 @@ export default function Navbar() {
                           Logout
                         </button>
                       </div>
+                    ) : (
+                      ""
                     )}
                   </div>
                 ) : (
@@ -273,49 +265,215 @@ export default function Navbar() {
                 )}
               </div>
             </div>
+            <button
+              className="navbar-toggler py-2 px-3"
+              type="button"
+              onClick={() => setNavtog(!navtog)}
+            >
+              {!navtog ? (
+                <span className="fa fa-x text-primary"></span>
+              ) : (
+                <span className="fa fa-bars text-primary"></span>
+              )}
+            </button>
+            {!navtog ? (
+              <div className="navbar-collapse bg-white" id="navbarCollapse">
+                <div className="navbar-nav mx-auto">
+                  <NavLink
+                    onClick={scrolltoTop}
+                    to="/"
+                    className="nav-item nav-link "
+                  >
+                    Home
+                  </NavLink>
+                  <NavLink
+                    onClick={scrolltoTop}
+                    to="/shop"
+                    className="nav-item nav-link"
+                  >
+                    Shop
+                  </NavLink>
+                  <div className="nav-item ">
+                    <Link
+                      onClick={() => {
+                        scrolltoTop();
+                        setToggle(!toggle);
+                      }}
+                      className="nav-link dropdown-toggle"
+                    >
+                      Others
+                    </Link>
+                    {!toggle ? (
+                      ""
+                    ) : (
+                      <div className="dropdown-menu m-0 rounded-0">
+                        <NavLink
+                          onClick={scrolltoTop}
+                          to="/cart"
+                          className="dropdown-item dropcol"
+                        >
+                          Cart
+                        </NavLink>
+                        <NavLink
+                          onClick={scrolltoTop}
+                          to="/checkout"
+                          className="dropdown-item dropcol "
+                        >
+                          Checkout
+                        </NavLink>
+                        <NavLink
+                          onClick={scrolltoTop}
+                          to="/testimonialslider"
+                          className="dropdown-item dropcol"
+                        >
+                          Testimonial
+                        </NavLink>
+                      </div>
+                    )}
+                  </div>
+                  <NavLink
+                    onClick={scrolltoTop}
+                    to="/contactus"
+                    className="nav-item nav-link"
+                  >
+                    Contact
+                  </NavLink>
+                  <NavLink
+                    onClick={scrolltoTop}
+                    to="/admin"
+                    className="nav-item nav-link"
+                  >
+                    Admin
+                  </NavLink>
+                </div>
+                <div className="d-flex m-3 me-0">
+                  <Link
+                    onClick={scrolltoTop}
+                    to="/cart"
+                    className="position-relative me-4 my-auto link-color"
+                  >
+                    <i className="fa fa-shopping-bag fa-2x "></i>
+                    {CartStateData.length ? (
+                      <span
+                        className="position-absolute bg-primary rounded-circle d-flex align-items-center justify-content-center text-light px-1"
+                        style={{
+                          top: "-5px",
+                          left: "15px",
+                          height: "20px",
+                          minWidth: "20px",
+                        }}
+                      >
+                        {CartStateData.length}
+                      </span>
+                    ) : (
+                      ""
+                    )}
+                  </Link>
+                </div>
+
+                <div className="navbar-nav mx-auto">
+                  {localStorage.getItem("login") ? (
+                    <div className="nav-item dropdown">
+                      <Link
+                        onClick={() => {
+                          scrolltoTop();
+                          setPtoggle(!ptoggle);
+                        }}
+                        to="/"
+                        className="nav-link link-color dropdown-toggle text-capitalize fw-bold"
+                      >
+                        {localStorage.getItem("name")}
+                        <span>
+                          {" "}
+                          <i className="fa fa-user text-primary"></i>
+                        </span>
+                      </Link>
+                      {localStorage.getItem("role") === "Buyer" ? (
+                        ptoggle ? (
+                          <div className="dropdown-menu m-0 rounded-0">
+                            <Link
+                              onClick={scrolltoTop}
+                              to="/buyerprofile"
+                              className="dropdown-item dropcol text-dark "
+                            >
+                              Profile
+                            </Link>
+
+                            <Link
+                              onClick={scrolltoTop}
+                              to="/checkout"
+                              className="dropdown-item dropcol text-dark "
+                            >
+                              Checkout
+                            </Link>
+                            <Link
+                              onClick={scrolltoTop}
+                              to="/order"
+                              className="dropdown-item dropcol text-dark "
+                            >
+                              Your Orders
+                            </Link>
+                            <button
+                              onClick={logout}
+                              to="/testimonials"
+                              className="dropdown-item dropcol text-dark "
+                            >
+                              Logout
+                            </button>
+                          </div>
+                        ) : (
+                          ""
+                        )
+                      ) : ptoggle ? (
+                        <div className="dropdown-menu m-0 rounded-0">
+                          <Link
+                            onClick={scrolltoTop}
+                            to="/admin"
+                            className="dropdown-item dropcol text-dark "
+                          >
+                            Admin
+                          </Link>
+
+                          <button
+                            onClick={logout}
+                            to="/testimonials"
+                            className="dropdown-item dropcol text-dark "
+                          >
+                            Logout
+                          </button>
+                        </div>
+                      ) : (
+                        ""
+                      )}
+                    </div>
+                  ) : (
+                    <div>
+                      <Link
+                        onClick={scrolltoTop}
+                        className="link-color"
+                        to="/login"
+                      >
+                        Login
+                      </Link>
+                      {" or "}
+                      <Link
+                        onClick={scrolltoTop}
+                        className="link-color"
+                        to="/signup"
+                      >
+                        SignUp
+                      </Link>
+                    </div>
+                  )}
+                </div>
+              </div>
+            ) : (
+              ""
+            )}
           </nav>
         </div>
       </div>
       {/* <!-- Navbar End --> */}
-
-      {/* <!-- Modal Search Start --> */}
-      <div
-        className="modal fade"
-        id="searchModal"
-        tabIndex="-1"
-        aria-labelledby="exampleModalLabel"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog modal-fullscreen">
-          <div className="modal-content rounded-0">
-            <div className="modal-header">
-              <h5 className="modal-title" id="exampleModalLabel">
-                Search by keyword
-              </h5>
-              <button
-                type="button"
-                className="btn-close"
-                data-bs-dismiss="modal"
-                aria-label="Close"
-              ></button>
-            </div>
-            <div className="modal-body d-flex align-items-center">
-              <div className="input-group w-75 mx-auto d-flex">
-                <input
-                  type="search"
-                  className="form-control p-3"
-                  placeholder="keywords"
-                  aria-describedby="search-icon-1"
-                />
-                <span id="search-icon-1" className="input-group-text p-3">
-                  <i className="fa fa-search"></i>
-                </span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      {/* <!-- Modal Search End --> */}
     </>
   );
 }

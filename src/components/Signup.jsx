@@ -5,6 +5,9 @@ import BreadCrumb from "./CustomHooks/BreadCrumb";
 
 export default function Signup() {
   let [show, setShow] = useState(false);
+  let [pass, setPass] = useState(false);
+  let [cpass, setCpass] = useState(false);
+
   let [errorMessages, setErrorMessage] = useState({
     name: "Name Must Required",
     username: "User Name Must Required",
@@ -189,12 +192,24 @@ export default function Signup() {
               <div className="col-md-6 mb-3">
                 <label>Password*</label>
                 <input
-                  type="password"
+                  type={pass ? "text" : "password"}
                   name="password"
                   onChange={getInputData}
-                  placeholder="**********"
+                  placeholder="Enter Your Password"
                   className="form-control"
                 />
+                {pass ? (
+                  <span>
+                    <i className="fa fa-eye" onClick={() => setPass(!pass)}></i>
+                  </span>
+                ) : (
+                  <span>
+                    <i
+                      className="fa fa-eye-slash"
+                      onClick={() => setPass(!pass)}
+                    ></i>
+                  </span>
+                )}
                 {show ? (
                   <p className="text-danger text-capitalize">
                     {errorMessages.password}
@@ -206,12 +221,27 @@ export default function Signup() {
               <div className="col-md-6 mb-3">
                 <label>Confirm Password*</label>
                 <input
-                  type="password"
+                  type={cpass ? "text" : "password"}
                   name="cpassword"
                   onChange={getInputData}
-                  placeholder="**********"
+                  placeholder="Enter Your Confirm Password"
                   className="form-control"
                 />
+                {cpass ? (
+                  <span>
+                    <i
+                      className="fa fa-eye"
+                      onClick={() => setCpass(!cpass)}
+                    ></i>
+                  </span>
+                ) : (
+                  <span>
+                    <i
+                      className="fa fa-eye-slash"
+                      onClick={() => setCpass(!cpass)}
+                    ></i>
+                  </span>
+                )}
               </div>
             </div>
             <div className="mb-3">
