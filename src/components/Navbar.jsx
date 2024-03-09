@@ -271,7 +271,12 @@ export default function Navbar() {
               onClick={() => setNavtog(!navtog)}
             >
               {!navtog ? (
-                <span className="fa fa-x text-primary"></span>
+                <span>
+                  <img
+                    src="/product-images/download.png"
+                    style={{ width: "25px" }}
+                  />
+                </span>
               ) : (
                 <span className="fa fa-bars text-primary"></span>
               )}
