@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Sidebar from "../Sidebar";
+// import { FaStar } from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 
 import {
@@ -8,6 +9,7 @@ import {
   getTestimonials,
 } from "../../Store/ActionCreators/TestimonialActionCreators";
 import BreadCrumb from "../../components/CustomHooks/BreadCrumb";
+import StarRating from "../../components/CustomHooks/StarRating";
 export default function Testimonial() {
   let [data, setData] = useState([]);
   let dispatch = useDispatch();
@@ -59,9 +61,15 @@ export default function Testimonial() {
                       <td>{item.id}</td>
                       <td>{item.name}</td>
                       <td>{item.profession}</td>
-                      <td>{item.star}</td>
+                      <td style={{ width: "120px" }}>
+                        <StarRating number={item.star} size={20} />
+                      </td>
                       <td>{item.pic1}</td>
-                      <td>{item.message}</td>
+                      <td
+                        dangerouslySetInnerHTML={{
+                          __html: item.message,
+                        }}
+                      ></td>
                       <td>
                         <Link to={`/admin/testimonial/update/${item.id}`}>
                           <i className="fa fa-edit text-primary"></i>

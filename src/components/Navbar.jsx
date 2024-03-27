@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { NavLink, Link, useNavigate } from "react-router-dom";
+import { FaBars } from "react-icons/fa";
+import { BiX } from "react-icons/bi";
+
 export default function Navbar() {
   let navigate = useNavigate();
   function logout() {
@@ -272,13 +275,12 @@ export default function Navbar() {
             >
               {!navtog ? (
                 <span>
-                  <img
-                    src="/product-images/download.png"
-                    style={{ width: "25px" }}
-                  />
+                  <BiX size={25} />
                 </span>
               ) : (
-                <span className="fa fa-bars text-primary"></span>
+                <span className="text-primary">
+                  <FaBars />
+                </span>
               )}
             </button>
             {!navtog ? (

@@ -573,3 +573,28 @@
     color: white !important;
     background-color: navy !important;
 }
+
+.staractive {
+    color: gold;
+}
+
+.starinactive {
+    color: black;
+}
+
+.commentScroll::-webkit-scrollbar {
+    width: 0px;
+}
+
+::-webkit-scrollbar {
+    width: 5px;
+}
+
+::-webkit-scrollbar-track {
+    background: white;
+}
+
+::-webkit-scrollbar-thumb {
+    background: grey;
+    border-radius: 10px;
+}

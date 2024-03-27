@@ -1,27 +1,30 @@
 import React, { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Sidebar from "../Sidebar";
+import { FaStar } from "react-icons/fa";
+
 import { useDispatch } from "react-redux";
 import { Editor } from "@tinymce/tinymce-react";
 
 import formValidation from "../../components/CustomHooks/FormValidation";
 import { addTestimonials } from "../../Store/ActionCreators/TestimonialActionCreators";
 import BreadCrumb from "../../components/CustomHooks/BreadCrumb";
+// import Stars from "../../components/CustomHooks/StarRating";
 export default function CreateTestimonial() {
   const editorRef = useRef(null);
 
+  const [hover, setHover] = useState(0);
+  const [rating, setRating] = useState(0);
   let [data, setData] = useState({
     name: "",
     profession: "",
-    star: "",
+    star: 0,
     message: "",
     pic1: "",
   });
   let [errorMessage, setErrorMessage] = useState({
     name: "Name Field Must Required",
     profession: "Profession Field Must Required",
-    star: "Star Field Must Required",
-    message: "Message Field Must Required",
     pic1: "Pic Field Must Required",
   });
   let [show, setShow] = useState(false);
@@ -38,6 +41,7 @@ export default function CreateTestimonial() {
       return {
         ...old,
         [name]: value,
+        star: rating,
       };
     });
   }
@@ -144,20 +148,26 @@ export default function CreateTestimonial() {
                   <label>
                     Star<span className="text-danger">*</span>
                   </label>
-                  <input
-                    type="text"
-                    name="star"
-                    onChange={getInputData}
-                    className="form-control"
-                    placeholder="Star Rating"
-                  />
-                  {show ? (
-                    <p className="text-danger text-capitalize my-2">
-                      {errorMessage.star}
-                    </p>
-                  ) : (
-                    ""
-                  )}
+                  <div>
+                    {[...Array(5)].map((_, index) => {
+                      index = index + 1;
+                      return (
+                        <FaStar
+                          key={index}
+                          onClick={() => setRating(index)}
+                          onMouseMove={() => setHover(index)}
+                          onMouseLeave={() => setHover(rating)}
+                          // onChange={getInputData}
+                          className={
+                            index <= (hover || rating)
+                              ? "staractive"
+                              : "starinactive"
+                          }
+                          size={24}
+                        />
+                      );
+                    })}
+                  </div>
                 </div>
                 <div className="col-md-6 mb-3">
                   <label>
@@ -219,13 +229,6 @@ export default function CreateTestimonial() {
                       "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
                   }}
                 />
-                {show ? (
-                  <p className="text-danger text-capitalize my-2">
-                    {errorMessage.message}
-                  </p>
-                ) : (
-                  ""
-                )}
               </div>
               <div className="mb-3">
                 <button

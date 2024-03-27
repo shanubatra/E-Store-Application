@@ -10,6 +10,7 @@ import wishlistSaga from "./WishlistSagas";
 import checkoutSaga from "./CheckoutSagas";
 import newsletterSaga from "./NewsletterSagas";
 import contactusSaga from "./ContactUsSagas";
+import commentSaga from "./CommentSagas";
 export default function* RootSaga() {
   yield all([
     maincategorySagas(),
@@ -22,5 +23,6 @@ export default function* RootSaga() {
     checkoutSaga(),
     newsletterSaga(),
     contactusSaga(),
+    commentSaga(),
   ]);
 }

@@ -4,6 +4,7 @@ import BreadCrumb from "./CustomHooks/BreadCrumb";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getTestimonials } from "../Store/ActionCreators/TestimonialActionCreators";
+import  StarRating  from "./CustomHooks/StarRating";
 export default function TestimonialRead() {
   let [data, setData] = useState({});
   let { id } = useParams();
@@ -53,13 +54,7 @@ export default function TestimonialRead() {
                 <tr>
                   <th>Rating</th>
                   <td>
-                    <div className="d-flex">
-                      <i className="fas fa-star text-primary"></i>
-                      <i className="fas fa-star text-primary"></i>
-                      <i className="fas fa-star text-primary"></i>
-                      <i className="fas fa-star text-primary"></i>
-                      <i className="fas fa-star text-primary"></i>
-                    </div>
+                    <StarRating number={data.star} size={30} />
                   </td>
                 </tr>
                 <tr>

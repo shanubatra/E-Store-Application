@@ -80,7 +80,8 @@ export default function App() {
           ) : (
             ""
           )}
-          {(localStorage.getItem("login") && localStorage.getItem("role") === "Admin" )? (
+          {localStorage.getItem("login") ||
+          localStorage.getItem("role") === "Admin" ? (
             <>
               <Route path="/admin" element={<AdminHome />} />
 

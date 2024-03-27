@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { FaStore } from "react-icons/fa";
 
 export default function Sidebar() {
   return (
@@ -45,7 +46,9 @@ export default function Sidebar() {
           to="/admin/product"
           className="list-group-item list-group-item-action"
         >
-          <i className="fs-5 text-primary fa fa-list"></i>
+          <i className="fs-5 text-primary">
+            <FaStore />
+          </i>
           <span className="float-end">Products</span>
         </Link>
         <Link

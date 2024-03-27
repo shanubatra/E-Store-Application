@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import Sidebar from "../Sidebar";
 import { useDispatch, useSelector } from "react-redux";
+import { FaStar } from "react-icons/fa";
 
 import formValidation from "../../components/CustomHooks/FormValidation";
 import {
@@ -15,19 +16,21 @@ import BreadCrumb from "../../components/CustomHooks/BreadCrumb";
 export default function UpdateTestimonialsupdateTestimonials() {
   const editorRef = useRef(null);
 
+  let [hover, setHover] = useState(0);
+  let [rating, setRating] = useState(0);
+
   let { id } = useParams();
 
   let [data, setData] = useState({
     name: "",
     profession: "",
-    star: "",
+    star: 0,
     message: "",
     pic1: "",
   });
   let [errorMessage, setErrorMessage] = useState({
     name: "",
     profession: "",
-    star: "",
     pic1: "",
   });
   let [show, setShow] = useState(false);
@@ -45,6 +48,7 @@ export default function UpdateTestimonialsupdateTestimonials() {
       return {
         ...old,
         [name]: value,
+        star: rating,
       };
     });
   }
@@ -157,23 +161,23 @@ export default function UpdateTestimonialsupdateTestimonials() {
                   <label>
                     Star<span className="text-danger">*</span>
                   </label>
-                  <input
-                    type="number"
-                    min={1}
-                    max={5}
-                    name="star"
-                    onChange={getInputData}
-                    className="form-control"
-                    placeholder="Star Rating"
-                    value={data.star}
-                  />
-                  {show ? (
-                    <p className="text-danger text-capitalize my-2">
-                      {errorMessage.star}
-                    </p>
-                  ) : (
-                    ""
-                  )}
+                  <div>
+                    {[...Array(5)].map((_, index) => {
+                      index = index + 1;
+                      return (
+                        <FaStar
+                          key={index}
+                          onClick={() => setRating(index)}
+                          onMouseMove={() => setHover(index)}
+                          onMouseLeave={() => setHover(rating)}
+                          className={
+                            index <= hover ? "staractive" : "starinactive"
+                          }
+                          size={24}
+                        />
+                      );
+                    })}
+                  </div>
                 </div>
                 <div className="col-md-6 mb-3">
                   <label>Pic1</label>

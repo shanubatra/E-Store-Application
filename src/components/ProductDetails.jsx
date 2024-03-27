@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import { FaStar, FaTrash } from "react-icons/fa";
 
 import ProductSlider from "./ProductSlider";
 
@@ -10,18 +11,36 @@ import {
   addWishlist,
   getWishlist,
 } from "../Store/ActionCreators/WishlistActionCreators";
+import {
+  addComment,
+  deleteComment,
+  getComment,
+} from "../Store/ActionCreators/CommentActionCreators";
 import BreadCrumb from "./CustomHooks/BreadCrumb";
+import StarRating from "./CustomHooks/StarRating";
 export default function ProductDetails() {
   let [qty, setQty] = useState(1);
   let [product, setProduct] = useState({});
+
   let [relatedProducts, setRelatedProducts] = useState([]);
   let { id } = useParams();
+  let [comment, setComment] = useState({
+    productid: "",
+    star: "",
+    message: "",
+    name: "",
+  });
+  let [data, setData] = useState([]);
+  const [hover, setHover] = useState(0);
+  const [rating, setRating] = useState(0);
 
   let navigate = useNavigate();
   let dispatch = useDispatch();
   let ProductStateData = useSelector((state) => state.ProductStateData);
   let CartStateData = useSelector((state) => state.CartStateData);
   let WishlistStateData = useSelector((state) => state.WishlistStateData);
+  let CommentStateData = useSelector((state) => state.CommentStateData);
+
   function addToCart() {
     var item = CartStateData.find(
       (x) => x.productid === id && x.userid === localStorage.getItem("userid")
@@ -62,10 +81,30 @@ export default function ProductDetails() {
     }
     navigate("/buyerprofile");
   }
+  function getCommentData(e) {
+    let { name, value } = e.target;
+    setComment((old) => {
+      return {
+        ...old,
+        [name]: value,
+        productid: id,
+        star: rating,
+      };
+    });
+  }
+  function postData() {
+    if (comment.message !== "") dispatch(addComment({ ...comment }));
+  }
+  function deleteComments(id) {
+    if (window.confirm("Are you sure you want to delete this item"))
+      dispatch(deleteComment({ id: id }));
+    getAPIData();
+  }
   function getAPIData() {
     dispatch(getCart());
     dispatch(getWishlist());
     dispatch(getProduct());
+    dispatch(getComment());
     if (ProductStateData.length) {
       let item = ProductStateData.find((x) => x.id === id);
       if (item) {
@@ -75,15 +114,25 @@ export default function ProductDetails() {
         );
       }
     }
+    if (CommentStateData.length) {
+      let item = CommentStateData.filter((x) => x.productid === id);
+      if (item) {
+        setData(item);
+      }
+    }
   }
   useEffect(() => {
     getAPIData();
-  }, [ProductStateData.length, CartStateData.length, WishlistStateData.length]);
+  }, [
+    ProductStateData.length,
+    CartStateData.length,
+    WishlistStateData.length,
+    CommentStateData.length,
+  ]);
   return (
     <>
       <BreadCrumb title="Product Details" />
-
-      {/* <!-- Single Product Start --> */}
+      {console.log(rating)}
       <div className="container-fluid py-5 mt-2">
         <div className="container">
           <div className="row g-4">
@@ -183,6 +232,7 @@ export default function ProductDetails() {
                   data-bs-slide-to="0"
                   height={100}
                   className="w-100"
+                  style={{ cursor: "pointer" }}
                   alt=""
                 />
                 <img
@@ -191,6 +241,7 @@ export default function ProductDetails() {
                   data-bs-slide-to="1"
                   height={100}
                   className="w-100"
+                  style={{ cursor: "pointer" }}
                   alt=""
                 />
                 <img
@@ -199,6 +250,7 @@ export default function ProductDetails() {
                   data-bs-slide-to="2"
                   height={100}
                   className="w-100"
+                  style={{ cursor: "pointer" }}
                   alt=""
                 />
                 <img
@@ -207,6 +259,7 @@ export default function ProductDetails() {
                   data-bs-slide-to="3"
                   height={100}
                   className="w-100"
+                  style={{ cursor: "pointer" }}
                   alt=""
                 />
               </div>
@@ -223,11 +276,7 @@ export default function ProductDetails() {
                 <sup className="text-success">{product.discount}% Off</sup>
               </h5>
               <div className="d-flex mb-4">
-                <i className="fa fa-star text-secondary"></i>
-                <i className="fa fa-star text-secondary"></i>
-                <i className="fa fa-star text-secondary"></i>
-                <i className="fa fa-star text-secondary"></i>
-                <i className="fa fa-star"></i>
+                <StarRating size={20} number={4} />
               </div>
               <p>Color : {product.color}</p>
               <p>Size : {product.size}</p>
@@ -281,9 +330,146 @@ export default function ProductDetails() {
                 />
               </div>
             </div>
+            <div className="col-lg-6 mt-5 mb-5">
+              <h4 className="mb-5 fw-bold">Related Comments ({data.length})</h4>
+              <div
+                className="p-3 relative mb-2 border rounded overflow-auto commentScroll"
+                style={{ maxHeight: "400px" }}
+              >
+                {data.length !== 0 ? (
+                  data.map((item, index) => {
+                    return (
+                      <div key={index}>
+                        <div className="flex justify-content-between">
+                          <div className="flex">
+                            <p className="me-3 fw-bold text-capitalize">
+                              {item.name}
+                            </p>
+                            <StarRating number={item.star} size={15} />
+                          </div>
+                          <div>
+                            <button
+                              onClick={() => {
+                                deleteComments(item.id);
+                              }}
+                              className="p-2"
+                              style={{
+                                backgroundColor: "white",
+                                border: "none",
+                              }}
+                            >
+                              <FaTrash color="red" size={20} />
+                            </button>
+                          </div>
+                        </div>
+                        <div>
+                          <p>{item.message}</p>
+                          {index !== data.length - 1 ? (
+                            <hr className="bg-dark " />
+                          ) : (
+                            ""
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })
+                ) : (
+                  <p className="text-dark">
+                    No Comment Available Post Comments
+                  </p>
+                )}
+              </div>
+            </div>
+            <div className="col-lg-6 mt-5">
+              <form>
+                <h4 className="mb-2 fw-bold mb-5">Leave a Reply</h4>
+                <div className="row g-4">
+                  <div className="col-lg-12">
+                    <div className="d-flex justify-content-between py-1 mb-0">
+                      <div className="d-flex align-items-center">
+                        <p
+                          className="mb-0 me-3"
+                          style={{ fontSize: "25px", color: "black" }}
+                        >
+                          Please rate:
+                        </p>
+                        <div
+                          className="d-flex align-items-center"
+                          style={{ fontSize: "12px" }}
+                        >
+                          <div>
+                            {[...Array(5)].map((_, index) => {
+                              index = index + 1;
+                              return (
+                                <FaStar
+                                  key={index}
+                                  onClick={() => {
+                                    setRating(index);
+                                  }}
+                                  onMouseMove={() => setHover(index)}
+                                  onMouseLeave={() => setHover(rating)}
+                                  className={
+                                    index <= (hover || rating)
+                                      ? "staractive"
+                                      : "starinactive"
+                                  }
+                                  size={24}
+                                />
+                              );
+                            })}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="col-lg-12 mt-2">
+                    <div className="border-bottom rounded mb-4">
+                      <label>
+                        Name<span className="text-danger">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        className="form-control me-4"
+                        placeholder="Enter Your Name"
+                        name="name"
+                        onChange={(e) => {
+                          getCommentData(e);
+                        }}
+                      />
+                    </div>
+                    <div className="border-bottom rounded">
+                      <label>
+                        Message<span className="text-danger">*</span>
+                      </label>
+                      <textarea
+                        type="text"
+                        className="form-control me-4"
+                        placeholder="message"
+                        name="message"
+                        rows={5}
+                        onChange={(e) => {
+                          getCommentData(e);
+                        }}
+                      ></textarea>
+                    </div>
+                  </div>
+                  <button
+                    onClick={() => {
+                      postData();
+                    }}
+                    className="btn border border-secondary text-white bg-primary rounded-pill px-4 py-3"
+                  >
+                    {" "}
+                    Post Comment
+                  </button>
+                </div>
+              </form>
+            </div>
           </div>
-          <h4 className="fw-bold mb-0 text-center mt-3">Related products</h4>
-          <ProductSlider data={relatedProducts} />
+          <div className="mt3">
+            <h4 className="fw-bold mb-0 text-center mt-3">Related products</h4>
+            <ProductSlider data={relatedProducts} />
+          </div>
         </div>
       </div>
       {/* <!-- Single Product End --> */}

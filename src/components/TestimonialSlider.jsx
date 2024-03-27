@@ -7,6 +7,7 @@ import { getTestimonials } from "../Store/ActionCreators/TestimonialActionCreato
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import BreadCrumb from "./CustomHooks/BreadCrumb";
+import StarRating from "./CustomHooks/StarRating";
 export default function TestimonialSlider(props) {
   let [data, setData] = useState([]);
   let dispatch = useDispatch();
@@ -81,7 +82,10 @@ export default function TestimonialSlider(props) {
                       >
                         <div
                           dangerouslySetInnerHTML={{
-                            __html: item.message.slice(0, 200),
+                            __html: item.message.slice(0, 150),
+                          }}
+                          style={{
+                            overflow: "hidden",
                           }}
                         ></div>
                         more....
@@ -99,13 +103,7 @@ export default function TestimonialSlider(props) {
                       <div className="ms-4 d-block">
                         <h6 className="text-dark">{item.name}</h6>
                         <p className="m-0 pb-3">{item.profession}</p>
-                        <div className="d-flex pe-5">
-                          <i className="fas fa-star text-primary"></i>
-                          <i className="fas fa-star text-primary"></i>
-                          <i className="fas fa-star text-primary"></i>
-                          <i className="fas fa-star text-primary"></i>
-                          <i className="fas fa-star text-primary"></i>
-                        </div>
+                        <StarRating number={item.star} size={15} />
                       </div>
                     </div>
                   </div>
